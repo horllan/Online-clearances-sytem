@@ -1,0 +1,75 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+  Register
+{% endblock %}
+
+{% block content %}
+  <h2>Register</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="form-group">{{ form.username.label_tag }}
+      {{ form.username }}
+      {{ form.username.errors }}</div>
+    <div class="form-group">{{ form.email.label_tag }}
+      {{ form.email }}
+      {{ form.email.errors }}</div>
+    <div class="form-group">{{ form.first_name.label_tag }}
+      {{ form.first_name }}
+      {{ form.first_name.errors }}</div>
+    <div class="form-group">{{ form.last_name.label_tag }}
+      {{ form.last_name }}
+      {{ form.last_name.errors }}</div>
+    <div class="form-group">{{ form.password1.label_tag }}
+      {{ form.password1 }}
+      {{ form.password1.errors }}</div>
+    <div class="form-group">{{ form.password2.label_tag }}
+      {{ form.password2 }}
+      {{ form.password2.errors }}</div>
+    <div class="form-group">{{ form.user_type.label_tag }}
+      {{ form.user_type }}
+      {{ form.user_type.errors }}</div>
+    <div id="student-fields" style="display: none;">
+      <div class="form-group">{{ form.student_id.label_tag }}
+        {{ form.student_id }}
+        {{ form.student_id.errors }}</div>
+      <div class="form-group">{{ form.year_of_study.label_tag }}
+        {{ form.year_of_study }}
+        {{ form.year_of_study.errors }}</div>
+    </div>
+    <div id="staff-fields" style="display: none;">
+      <div class="form-group">{{ form.department.label_tag }}
+        {{ form.department }}
+        {{ form.department.errors }}</div>
+      <div class="form-group">{{ form.position.label_tag }}
+        {{ form.position }}
+        {{ form.position.errors }}</div>
+    </div>
+    <button type="submit" class="btn btn-primary">Register</button>
+  </form>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var userTypeSelect = document.getElementById('id_user_type')
+      var studentFields = document.getElementById('student-fields')
+      var staffFields = document.getElementById('staff-fields')
+    
+      function toggleFields() {
+        if (userTypeSelect.value === 'student') {
+          studentFields.style.display = 'block'
+          staffFields.style.display = 'none'
+        } else if (userTypeSelect.value === 'staff') {
+          studentFields.style.display = 'none'
+          staffFields.style.display = 'block'
+        } else {
+          studentFields.style.display = 'none'
+          staffFields.style.display = 'none'
+        }
+      }
+    
+      userTypeSelect.addEventListener('change', toggleFields)
+      toggleFields() // Call once to set initial state
+    })
+  </script>
+{% endblock %}

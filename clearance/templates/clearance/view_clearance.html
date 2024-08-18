@@ -1,0 +1,33 @@
+{% extends 'clearance/base.html' %}
+
+{% block title %}View Clearance Form{% endblock %}
+
+{% block content %}
+<h2>Clearance Form Status</h2>
+<p>Submitted on: {{ clearance_form.created_at }}</p>
+<p>Overall Status: {{ clearance_form.get_status_display }}</p>
+
+<h3>Sections</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Section</th>
+            <th>Status</th>
+            <th>Cleared By</th>
+            <th>Cleared At</th>
+            <th>Comments</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for section in sections %}
+        <tr>
+            <td>{{ section.get_section_display }}</td>
+            <td>{{ section.get_status_display }}</td>
+            <td>{{ section.cleared_by.user.get_full_name|default:"-" }}</td>
+            <td>{{ section.cleared_at|default:"-" }}</td>
+            <td>{{ section.comments|default:"-" }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

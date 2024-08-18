@@ -1,0 +1,12 @@
+{% extends 'clearance/base.html' %}
+
+{% block title %}Submit Clearance Form{% endblock %}
+
+{% block content %}
+<h2>Submit Clearance Form</h2>
+<p>Are you sure you want to submit a new clearance form?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary">Submit Clearance Form</button>
+</form>
+{% endblock %}

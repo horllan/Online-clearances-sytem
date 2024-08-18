@@ -1,0 +1,15 @@
+{% extends 'clearance/base.html' %}
+
+{% block title %}
+  Student Home
+{% endblock %}
+
+{% block content %}
+  <h2>Welcome, {{ user.student.user.get_full_name }}</h2>
+  <p>Your student ID: {{ user.student.student_id }}</p>
+
+  <div class="mt-4">
+    <a href="{% url 'submit_clearance' %}" class="btn btn-primary">Submit Clearance Form</a>
+    <a href="{% url 'view_clearance' %}" class="btn btn-secondary">View Clearance Status</a>
+  </div>
+{% endblock %}
