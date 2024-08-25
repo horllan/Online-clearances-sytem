@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Student, Staff
+from .models import Student, Staff, ClearanceDocument
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -63,3 +63,8 @@ class CustomUserCreationForm(UserCreationForm):
                     position=self.cleaned_data['position']
                 )
         return user
+
+class DocumentUploadForm(forms.ModelForm):
+    class Meta:
+        model = ClearanceDocument
+        fields = ['document']

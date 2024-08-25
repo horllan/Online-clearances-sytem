@@ -1,21 +1,16 @@
-{% extends 'clearance/base.html' %}
+{% extends 'main/base.html' %}
 
-{% block title %}View Clearance Form{% endblock %}
+{% block title %}View Clearance{% endblock %}
 
 {% block content %}
 <h2>Clearance Form Status</h2>
-<p>Submitted on: {{ clearance_form.created_at }}</p>
-<p>Overall Status: {{ clearance_form.get_status_display }}</p>
-
-<h3>Sections</h3>
 <table class="table">
     <thead>
         <tr>
             <th>Section</th>
             <th>Status</th>
-            <th>Cleared By</th>
-            <th>Cleared At</th>
-            <th>Comments</th>
+            <th>Document</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
@@ -23,9 +18,25 @@
         <tr>
             <td>{{ section.get_section_display }}</td>
             <td>{{ section.get_status_display }}</td>
-            <td>{{ section.cleared_by.user.get_full_name|default:"-" }}</td>
-            <td>{{ section.cleared_at|default:"-" }}</td>
-            <td>{{ section.comments|default:"-" }}</td>
+            <td>
+                {% with doc=section.clearancedocument_set.first %}
+                    {% if doc %}
+                        {{ doc.filename }} 
+                        {% if doc.verified %}
+                            <span class="badge bg-success">Verified</span>
+                        {% else %}
+                            <span class="badge bg-warning">Pending Verification</span>
+                        {% endif %}
+                    {% else %}
+                        No document uploaded
+                    {% endif %}
+                {% endwith %}
+            </td>
+            <td>
+                <a href="{% url 'upload_document' section.id %}" class="btn btn-primary btn-sm">
+                    {% if section.clearancedocument_set.exists %}Update{% else %}Upload{% endif %} Document
+                </a>
+            </td>
         </tr>
         {% endfor %}
     </tbody>

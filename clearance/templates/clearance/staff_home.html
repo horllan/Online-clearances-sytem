@@ -1,11 +1,36 @@
 {% extends 'main/base.html' %}
 
-{% block title %}
-  Staff Home
-{% endblock %}
+{% block title %}Staff Home{% endblock %}
 
 {% block content %}
-  <h2>Welcome, {{ user.staff.user.get_full_name }}</h2>
-  <p>Department: {{ user.staff.department }}</p>
-  <!-- Add more staff-specific content here -->
-{% endblock %}
+<h2>Welcome, {{ user.staff.user.get_full_name }}</h2>
+<p>Department: {{ user.staff.department }}</p>
+
+<h3>Pending Clearance Requests</h3>
+{% if pending_sections %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Student</th>
+                <th>Student ID</th>
+                <th>Submission Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for section in pending_sections %}
+                <tr>
+                    <td>{{ section.clearance_form.student.user.get_full_name }}</td>
+                    <td>{{ section.clearance_form.student.student_id }}</td>
+                    <td>{{ section.clearance_form.created_at }}</td>
+                    <td>
+                        <a href="{% url 'process_clearance' section.id %}" class="btn btn-primary btn-sm">Process</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No pending clearance requests.</p>
+{% endif %}
+{% endblock %} 

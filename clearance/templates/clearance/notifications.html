@@ -1,0 +1,27 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block content %}
+<h2>Notifications</h2>
+
+{% if notifications %}
+    <ul class="list-group">
+    {% for notification in notifications %}
+        <li class="list-group-item {% if not notification.is_read %}list-group-item-info{% endif %}">
+            {{ notification.message }}
+            <small class="text-muted d-block">{{ notification.created_at }}</small>
+            {% if not notification.is_read %}
+                <form method="post" class="mt-2">
+                    {% csrf_token %}
+                    <input type="hidden" name="notification_id" value="{{ notification.id }}">
+                    <button type="submit" class="btn btn-sm btn-primary">Mark as Read</button>
+                </form>
+            {% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No notifications.</p>
+{% endif %}
+{% endblock %}

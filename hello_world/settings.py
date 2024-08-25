@@ -73,6 +73,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                #'hello_world.clearance.context_processors.notification_count',
             ],
         },
     },
@@ -125,7 +126,7 @@ USE_TZ = True
 
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
-
+LOGIN_URL ="login"
 
 
 # Static files (CSS, JavaScript, Images)
@@ -140,6 +141,7 @@ STATIC_ROOT = BASE_DIR / "hello_world" / "staticfiles"
 
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "hello_world" / "media"
+
 
 
 # Default primary key field type

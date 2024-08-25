@@ -1,4 +1,5 @@
 from django.db import models
+import os
 
 # Create your models here.
 from django.db import models
@@ -48,9 +49,11 @@ class ClearanceForm(models.Model):
         super().save(*args, **kwargs)
         if is_new:
             self.create_sections()
-
+    
     def __str__(self):
-        return f"Clearance Form for {self.student.user.get_full_name()}"
+        return f"Document for {self.student.user.username} - {self.section.get_section_display()}"
+
+    
 
     def get_overall_status(self):
         sections = self.clearancesection_set.all()
@@ -104,17 +107,56 @@ class ClearanceSection(models.Model):
     def __str__(self):
         return f"{self.get_section_display()} - {self.get_status_display()}"
 
-        def clear(self, staff):
-            self.status = 'cleared'
-            self.cleared_by = staff
-            self.cleared_at = timezone.now()
-            self.save()
-            self.clearance_form.update_status()
+    def clear(self, staff):
+        self.status = 'cleared'
+        self.cleared_by = staff
+        self.cleared_at = timezone.now()
+        self.save()
+        self.clearance_form.update_status()
 
-            def reject(self, staff, comment):
-                self.status = 'rejected'
-                self.cleared_by = staff
-                self.cleared_at = timezone.now()
-                self.comments = comment
-                self.save()
-                self.clearance_form.update_status()
+    def reject(self, staff, comment):
+        self.status = 'rejected'
+        self.cleared_by = staff
+        self.cleared_at = timezone.now()
+        self.comments = comment
+        self.save()
+        self.clearance_form.update_status()
+
+
+
+
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
+    message = models.CharField(max_length=255)
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Notification for {self.user.username}: {self.message[:50]}"
+
+
+
+
+
+def user_directory_path(instance, filename):
+    return f'clearance_documents/user_{instance.student.user.id}/{filename}'
+
+
+class ClearanceDocument(models.Model):
+    student = models.ForeignKey('Student', on_delete=models.CASCADE)
+    clearance_form = models.ForeignKey('ClearanceForm', on_delete=models.CASCADE)
+    section = models.ForeignKey('ClearanceSection', on_delete=models.CASCADE)
+    document = models.FileField(upload_to=user_directory_path)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    verified = models.BooleanField(default=False)
+    verified_by = models.ForeignKey('Staff', on_delete=models.SET_NULL, null=True, blank=True)
+    verified_at = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f"Document for {self.student.user.username} - {self.section.get_section_display()}"
+
+    def filename(self):
+        return os.path.basename(self.document.name)

@@ -1,0 +1,26 @@
+{% extends 'clearance/base.html' %}
+
+{% block title %}Process Clearance{% endblock %}
+
+{% block content %}
+<h2>Process Clearance Request</h2>
+<h3>Student Information</h3>
+<p><strong>Name:</strong> {{ student.user.get_full_name }}</p>
+<p><strong>Student ID:</strong> {{ student.student_id }}</p>
+<p><strong>Department:</strong> {{ student.department }}</p>
+
+<h3>Clearance Section: {{ section.get_section_display }}</h3>
+<p><strong>Current Status:</strong> {{ section.get_status_display }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="comment">Comment:</label>
+        <textarea name="comment" id="comment" class="form-control" rows="3"></textarea>
+    </div>
+    <div class="form-group mt-3">
+        <button type="submit" name="action" value="approve" class="btn btn-success">Approve</button>
+        <button type="submit" name="action" value="reject" class="btn btn-danger">Reject</button>
+    </div>
+</form>
+{% endblock %}

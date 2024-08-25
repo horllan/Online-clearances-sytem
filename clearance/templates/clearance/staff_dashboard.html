@@ -1,0 +1,53 @@
+{% extends 'clearance/base.html' %}
+
+{% block title %}Staff Dashboard{% endblock %}
+
+{% block content %}
+<h2>Welcome, {{ user.staff.user.get_full_name }}</h2>
+<p>Department: {{ user.staff.department }}</p>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <h3>Pending Clearance Requests</h3>
+        {% if pending_sections %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Student ID</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for section in pending_sections %}
+                <tr>
+                    <td>{{ section.clearance_form.student.user.get_full_name }}</td>
+                    <td>{{ section.clearance_form.student.student_id }}</td>
+                    <td>
+                        <a href="{% url 'process_clearance' section.id %}" class="btn btn-primary btn-sm">Process</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No pending clearance requests.</p>
+        {% endif %}
+    </div>
+    <div class="col-md-6">
+        <h3>Recently Processed</h3>
+        {% if recently_processed %}
+        <ul class="list-group">
+            {% for section in recently_processed %}
+            <li class="list-group-item">
+                {{ section.clearance_form.student.user.get_full_name }} ({{ section.clearance_form.student.student_id }}) - {{ section.get_status_display }}
+                <small class="text-muted d-block">Processed on {{ section.cleared_at|date:"F d, Y H:i" }}</small>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No recently processed clearance requests.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
